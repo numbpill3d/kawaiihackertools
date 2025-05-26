@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>~*~ KAWAII HACKER TOOLS v2.3.7 ~*~</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier Prime', monospace;
+            background: linear-gradient(45deg, #000011, #001122, #002233);
+            color: #00ff88;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #ff00aa, #00aaff, #aa00ff);
+            background-size: 200% 100%;
+            animation: rainbow-flow 3s linear infinite;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 0, 170, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        @keyframes rainbow-flow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            color: #fff;
+            text-shadow: 0 0 10px #ff00aa, 0 0 20px #ff00aa;
+            animation: glow-pulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow-pulse {
+            from { text-shadow: 0 0 10px #ff00aa, 0 0 20px #ff00aa; }
+            to { text-shadow: 0 0 20px #ff00aa, 0 0 30px #ff00aa, 0 0 40px #ff00aa; }
+        }
+        
+        .nav-bar {
+            background: rgba(0, 0, 17, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 10px;
+            gap: 10px;
+            border-bottom: 2px solid #00ff88;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(45deg, #001122, #002244);
+            color: #00ff88;
+            border: 2px solid #00ff88;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn:hover {
+            background: #00ff88;
+            color: #000011;
+            box-shadow: 0 0 15px #00ff88;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #ff00aa;
+            color: #fff;
+            border-color: #ff00aa;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: calc(100vh - 200px);
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            background: rgba(0, 17, 34, 0.8);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, #00ff8820, transparent);
+            animation: rotate 4s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .sidebar h3 {
+            color: #ff00aa;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            margin: 8px 0;
+            padding: 5px;
+            border-left: 3px solid #00ff88;
+            padding-left: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .sidebar li:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .main-content {
+            flex: 2;
+            min-width: 600px;
+            background: rgba(0, 17, 34, 0.9);
+            border: 2px solid #00aaff;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .tool-card {
+            background: linear-gradient(135deg, #001122, #002244);
+            border: 2px solid #00ff88;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tool-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .tool-card:hover::before {
+            left: 100%;
+        }
+        
+        .tool-title {
+            color: #ff00aa;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tool-desc {
+            color: #00aaff;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .download-btn {
+            background: linear-gradient(45deg, #ff00aa, #aa00ff);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 0, 170, 0.4);
+        }
+        
+        .loading-bar {
+            width: 100%;
+            height: 6px;
+            background: #001122;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff00aa, #00aaff, #aa00ff);
+            background-size: 200% 100%;
+            animation: loading 2s ease-in-out infinite, rainbow-flow 1s linear infinite;
+            width: 0;
+            border-radius: 3px;
+        }
+        
+        @keyframes loading {
+            0%, 100% { width: 0; }
+            50% { width: 100%; }
+        }
+        
+        .ascii-art {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            color: #00ff88;
+            text-align: center;
+            margin: 20px 0;
+            line-height: 1.2;
+            white-space: pre;
+        }
+        
+        .terminal {
+            background: #000;
+            border: 2px solid #00ff88;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier Prime', monospace;
+            color: #00ff88;
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .terminal-line {
+            margin: 5px 0;
+            animation: typewriter 3s steps(40) infinite;
+        }
+        
+        @keyframes typewriter {
+            0% { width: 0; }
+            50% { width: 100%; }
+            100% { width: 100%; }
+        }
+        
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #001122, #002244);
+            border: 3px solid #ff00aa;
+            border-radius: 15px;
+            padding: 30px;
+            z-index: 2000;
+            transition: all 0.3s ease;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .popup-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #ff00aa;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .footer {
+            background: rgba(0, 17, 34, 0.9);
+            border-top: 2px solid #00ff88;
+            padding: 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links a {
+            color: #00aaff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #ff00aa;
+        }
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .gallery-item {
+            aspect-ratio: 1;
+            background: linear-gradient(45deg, #ff00aa20, #00aaff20);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff88;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .gallery-item:hover {
+            transform: rotateY(180deg);
+            background: linear-gradient(45deg, #00aaff20, #ff00aa20);
+        }
+        
+        .scrolling-text {
+            white-space: nowrap;
+            overflow: hidden;
+            background: linear-gradient(90deg, #ff00aa, #00aaff, #aa00ff, #ff00aa);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: scroll-left 10s linear infinite, rainbow-flow 3s linear infinite;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+        
+        @keyframes scroll-left {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .collapsible {
+            background: rgba(0, 17, 34, 0.5);
+            border: 1px solid #00ff88;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .collapsible-header {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+        
+        .collapsible-header:hover {
+            background: rgba(0, 255, 136, 0.2);
+        }
+        
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 15px;
+        }
+        
+        .collapsible.active .collapsible-content {
+            max-height: 500px;
+            padding: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                max-width: none;
+                order: -1;
+            }
+            
+            .main-content {
+                min-width: auto;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .widget {
+            background: rgba(0, 17, 34, 0.6);
+            border: 1px solid #00aaff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .widget h4 {
+            color: #ff00aa;
+            margin-bottom: 10px;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 2s infinite;
+        }
+        
+        .status-online { background: #00ff88; }
+        .status-offline { background: #ff4444; }
+        .status-warning { background: #ffaa00; }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="matrix-bg" id="matrix-canvas"></canvas>
+    
+    <header class="header">
+        <h1>~*~ KAWAII HACKER TOOLS v2.3.7 ~*~</h1>
+        <div class="scrolling-text">PSYCHIC_INTRUSION.EXE | EMOTION_VIRUS_2024 | DREAM_DECODER_BETA | AURA_SCANNER_PRO | CHAKRA_DDoS_TOOLKIT</div>
+    </header>
+    
+    <nav class="nav-bar">
+        <button class="nav-btn active" onclick="showTab('tools')">HACK TOOLS</button>
+        <button class="nav-btn" onclick="showTab('status')">SYSTEM STATUS</button>
+        <button class="nav-btn" onclick="showTab('changelog')">CHANGELOG</button>
+        <button class="nav-btn" onclick="showTab('gallery')">SCREENSHOTS</button>
+        <button class="nav-btn" onclick="showTab('about')">ABOUT</button>
+    </nav>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <h3>ACTIVE EXPLOITS</h3>
+            <ul>
+                <li><span class="status-indicator status-online"></span>Emotional Buffer Overflow</li>
+                <li><span class="status-indicator status-warning"></span>Psychic SQL Injection</li>
+                <li><span class="status-indicator status-online"></span>Dream Memory Leak</li>
+                <li><span class="status-indicator status-offline"></span>Aura XSS Attack</li>
+                <li><span class="status-indicator status-online"></span>Chakra Port Scanner</li>
+            </ul>
+            
+            <div class="widget">
+                <h4>NETWORK STATUS</h4>
+                <div>Astral Plane: <span style="color: #00ff88;">CONNECTED</span></div>
+                <div>Ethereal Network: <span style="color: #ffaa00;">UNSTABLE</span></div>
+                <div>Dream Server: <span style="color: #00ff88;">ONLINE</span></div>
+            </div>
+            
+            <div class="widget">
+                <h4>QUICK LINKS</h4>
+                <div style="cursor: pointer; margin: 5px 0; color: #00aaff;" onclick="showPopup('contact')">[ CONTACT ADMIN ]</div>
+                <div style="cursor: pointer; margin: 5px 0; color: #00aaff;" onclick="showPopup('help')">[ HELP CENTER ]</div>
+                <div style="cursor: pointer; margin: 5px 0; color: #00aaff;" onclick="showPopup('discord')">[ JOIN DISCORD ]</div>
+            </div>
+        </aside>
+        
+        <aside class="sidebar">
+            <h3>ASCII HEARTS ♥</h3>
+            <div class="ascii-art">
+   ♥ ERROR_404 ♥
+  /   LOVE   \
+ | NOT_FOUND |
+  \  ╰( ͡° ͜ʖ ͡° )╯  /
+   ♥ ━━━━━━━ ♥
+
+   ♥ SEGFAULT ♥
+     ROMANCE
+  ♥ ━━━━━━━ ♥
+</div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <span>RECENT BREACHES</span>
+                    <span>+</span>
+                </div>
+                <div class="collapsible-content">
+                    <div>• Penetrated Bank of Emotions</div>
+                    <div>• Compromised Love Firebase</div>
+                    <div>• Extracted Dreams Database</div>
+                    <div>• Hijacked Aura API Keys</div>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <span>PAYLOAD LIBRARY</span>
+                    <span>+</span>
+                </div>
+                <div class="collapsible-content">
+                    <div>• heartbreak.exe (v3.2)</div>
+                    <div>• lovesick_trojan.dll</div>
+                    <div>• emotional_ransomware.py</div>
+                    <div>• dream_stealer.js</div>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div id="tools" class="tab-content active">
+                <h2 style="color: #ff00aa; font-family: 'Orbitron', monospace; text-align: center; margin-bottom: 30px;">
+                    KAWAII HACKING ARSENAL ~(◕‿◕)~
+                </h2>
+                
+                <div class="tool-grid">
+                    <div class="tool-card" onclick="startDownload(this, 'psychic_hack')">
+                        <div class="tool-title">PSYCHIC INTRUSION v4.20</div>
+                        <div class="tool-desc">
+                            Penetrate mental firewalls using quantum emotional algorithms. 
+                            Exploits cognitive buffer overflows to extract deepest thoughts.
+                            ★ Compatible with all brain architectures
+                        </div>
+                        <button class="download-btn">DOWNLOAD PSYCHIC_HACK.EXE</button>
+                        <div class="loading-bar">
+                            <div class="loading-progress" style="width: 0;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card" onclick="startDownload(this, 'emotion_virus')">
+                        <div class="tool-title">EMOTIONAL VIRUS 2024</div>
+                        <div class="tool-desc">
+                            Self-replicating feelings that spread through social networks.
+                            Payload includes: Love, Heartbreak, Jealousy, and Confusion modules.
+                            ★ Zero-day emotional exploits included
+                        </div>
+                        <button class="download-btn">DOWNLOAD EMOTION_VIRUS.ZIP</button>
+                        <div class="loading-bar">
+                            <div class="loading-progress" style="width: 0;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card" onclick="startDownload(this, 'dream_decoder')">
+                        <div class="tool-title">DREAM DECODER BETA</div>
+                        <div class="tool-desc">
+                            Decrypt REM sleep patterns to extract subconscious data.
+                            Includes neural network training for nightmare injection attacks.
+                            ★ Supports lucid dreaming backdoors
+                        </div>
+                        <button class="download-btn">DOWNLOAD DREAM_DECODER.DMG</button>
+                        <div class="loading-bar">
+                            <div class="loading-progress" style="width: 0;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card" onclick="startDownload(this, 'aura_scanner')">
+                        <div class="tool-title">AURA SCANNER PRO</div>
+                        <div class="tool-desc">
+                            Advanced spiritual reconnaissance tool for energy field mapping.
+                            Detects vulnerabilities in chakra configurations and aura protocols.
+                            ★ Machine learning powered vibrational analysis
+                        </div>
+                        <button class="download-btn">DOWNLOAD AURA_SCANNER.APP</button>
+                        <div class="loading-bar">
+                            <div class="loading-progress" style="width: 0;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card" onclick="startDownload(this, 'chakra_ddos')">
+                        <div class="tool-title">CHAKRA DDoS TOOLKIT</div>
+                        <div class="tool-desc">
+                            Overwhelm spiritual servers with coordinated energy attacks.
+                            Includes botnet of compromised meditation apps and yoga studios.
+                            ★ Distributed across 7 chakra nodes
+                        </div>
+                        <button class="download-btn">DOWNLOAD CHAKRA_DDOS.TAR.GZ</button>
+                        <div class="loading-bar">
+                            <div class="loading-progress" style="width: 0;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card" onclick="startDownload(this, 'love_rootkit')">
+                        <div class="tool-title">LOVE ROOTKIT</div>
+                        <div class="tool-desc">
+                            Deep system-level access to romantic operating systems.
+                            Hides malicious affection processes from relationship antivirus.
+                            ★ Persistent across breakups and makeups
+                        </div>
+                        <button class="download-btn">DOWNLOAD LOVE_ROOTKIT.ISO</button>
+                        <div class="loading-bar">
+                            <div class="loading-progress" style="width: 0;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="status" class="tab-content">
+                <h2 style="color: #00aaff; font-family: 'Orbitron', monospace; margin-bottom: 20px;">SYSTEM STATUS</h2>
+                
+                <div class="terminal">
+                    <div class="terminal-line">kawaii@hacker:~$ systemctl status emotional-firewall</div>
+                    <div class="terminal-line">● emotional-firewall.service - Kawaii Emotional Protection</div>
+                    <div class="terminal-line">   Loaded: loaded (/etc/systemd/system/emotional-firewall.service)</div>
+                    <div class="terminal-line">   Active: active (running) since Mon 2024-05-26 13:37:00 JST</div>
+                    <div class="terminal-line">   Status: "Blocking 99.7% of incoming heartbreak packets"</div>
+                    <div class="terminal-line">kawaii@hacker:~$ netstat -tulpn | grep EMOTION</div>
+                    <div class="terminal-line">tcp    0.0.0.0:8080    LISTEN    1337/love_daemon</div>
+                    <div class="terminal-line">tcp    0.0.0.0:6969    LISTEN    420/dream_server</div>
+                    <div class="terminal-line">udp    0.0.0.0:1337    LISTEN    666/psychic_svc</div>
+                </div>
+                
+                <div class="widget">
+                    <h4>SERVER METRICS</h4>
+                    <div>CPU Usage: <span style="color: #00ff88;">12.7%</span> (Mostly processing feelings)</div>
+                    <div>Memory: <span style="color: #ffaa00;">78.2%</span> (Emotional cache full)</div>
+                    <div>Network: <span style="color: #00ff88;">↑ 1.2MB/s ↓ 867KB/s</span></div>
+                    <div>Disk I/O: <span style="color: #00ff88;">Writing dreams to /dev/subconscious</span></div>
+                </div>
+                
+                <div class="widget">
+                    <h4>ACTIVE CONNECTIONS</h4>
+                    <div>💕 Romance API: 42 connections</div>
+                    <div>🔮 Psychic Network: 13 connections</div>
+                    <div>💤 Dream Tunnel: 7 connections</div>
+                    <div>✨ Aura Exchange: 28 connections</div>
+                </div>
+            </div>
+            
+            <div id="changelog" class="tab-content">
+                <h2 style="color: #aa00ff; font-family: 'Orbitron', monospace; margin-bottom: 20px;">CHANGELOG</h2>
+                
+                <div class="terminal">
+                    <div class="terminal-line">==== KAWAII HACKER TOOLS v2.3.7 CHANGELOG ====</div>
+                    <div class="terminal-line"></div>
+                    <div class="terminal-line">[2024-05-26] v2.3.7 "Emotional Overflow"</div>
+                    <div class="terminal-line">+ Added Chakra DDoS Toolkit with 7-node botnet</div>
+                    <div class="terminal-line">+ Enhanced Dream Decoder with nightmare injection</div>
+                    <div class="terminal-line">* Fixed memory leak in Love Rootkit (was too attached)</div>
+                    <div class="terminal-line">* Optimized Psychic Intrusion algorithms for better mind reading</div>
+                    <div class="terminal-line">- Removed Heartbreak.exe (too effective, caused lawsuits)</div>
+                    <div class="terminal-line"></div>
+                    <div class="terminal-line">[2024-05-20] v2.3.6 "Astral Projection"</div>
+                    <div class="terminal-line">+ New Aura Scanner with ML-powered vibrational analysis</div>
+                    <div class="terminal-line">+ Emotional Virus now supports TikTok payload delivery</div>
+                    <div class="terminal-line">* Patched buffer overflow in feelings.dll</div>
+                    <div class="terminal-line">* Updated ASCII hearts with more error codes</div>
+                    <div class="terminal-line"></div>
+                    <div class="terminal-line">[2024-05-15] v2.3.5 "Quantum Entanglement"</div>
+                    <div class="terminal-line">+ Added persistent love rootkit for long-term relationships</div>
+                    <div class="terminal-line">+ Dream Decoder beta release with REM encryption bypass</div>
+                    <div class="terminal-line">* Fixed compatibility issues with modern broken hearts</div>
+                    <div class="terminal-line">* Improved error handling for unrequited love scenarios</div>
+                    <div class="terminal-line"></div>
+                    <div class="terminal-line">[2024-05-10] v2.3.4 "Cognitive Dissonance"</div>
+                    <div class="terminal-line">+ Initial release of Psychic Intrusion tool</div>
+                    <div class="terminal-line">+ Added Emotional Virus with social network propagation</div>
+                    <div class="terminal-line">+ Kawaii theme with animated backgrounds and effects</div>
+                    <div class="terminal-line">* First stable release of the hacker tools directory</div>
+                </div>
+            </div>
+            
+            <div id="gallery" class="tab-content">
+                <h2 style="color: #ff00aa; font-family: 'Orbitron', monospace; margin-bottom: 20px;">SCREENSHOTS</h2>
+                
+                <div class="image-gallery">
+                    <div class="gallery-item">PSYCHIC<br/>SCAN.PNG</div>
+                    <div class="gallery-item">EMOTION<br/>PAYLOAD.JPG</div>
+                    <div class="gallery-item">DREAM<br/>DECRYPT.GIF</div>
+                    <div class="gallery-item">AURA<br/>MAP.SVG</div>
+                    <div class="gallery-item">CHAKRA<br/>BOTNET.PNG</div>
+                    <div class="gallery-item">LOVE<br/>EXPLOIT.JPG</div>
+                    <div class="gallery-item">HEART<br/>OVERFLOW.GIF</div>
+                    <div class="gallery-item">SOUL<br/>PATCH.PNG</div>
+                </div>
+                
+                <div class="ascii-art">
+♥══════════════════════════════════════════════════════════════♥
+║  KAWAII HACKER SCREENSHOTS - EMOTIONAL EXPLOITS IN ACTION   ║
+║                                                              ║
+║    ERROR_404: Love not found in target system               ║
+║    WARNING: Emotional buffer overflow detected              ║
+║    SUCCESS: Dream payload injected successfully             ║
+║    INFO: Psychic connection established on port 1337        ║
+║                                                              ║
+║         ♥ ♥ ♥ HACK THE PLANET WITH LOVE ♥ ♥ ♥               ║
+♥══════════════════════════════════════════════════════════════♥
+</div>
+            </div>
+            
+            <div id="about" class="tab-content">
+                <h2 style="color: #00ff88; font-family: 'Orbitron', monospace; margin-bottom: 20px;">ABOUT KAWAII HACKER TOOLS</h2>
+                
+                <p style="margin-bottom: 20px; line-height: 1.6; color: #00aaff;">
+                    Welcome to the most adorable collection of emotional exploitation tools ever created! 
+                    Our kawaii hacker arsenal combines the cuteness of Japanese pop culture with the raw power of advanced penetration testing techniques.
+                </p>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <span>MISSION STATEMENT</span>
+                        <span>+</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>We believe that hacking should be both effective and aesthetically pleasing. 
+                        Our tools penetrate the deepest layers of human emotion while maintaining 
+                        that special kawaii charm that makes even the most devastating psychic attacks feel warm and fuzzy.</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <span>TECHNICAL SPECS</span>
+                        <span>+</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Built with cutting-edge emotional intelligence algorithms, quantum-encrypted love protocols, 
+                        and machine learning models trained on millions of broken hearts. All tools are optimized 
+                        for maximum kawaii factor while maintaining enterprise-grade penetration capabilities.</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <span>DISCLAIMER</span>
+                        <span>+</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>These tools are for educational and entertainment purposes only. We are not responsible 
+                        for any emotional damage, spiritual intrusions, or romantic complications that may arise 
+                        from the use of our kawaii hacking arsenal. Please hack responsibly! ♥</p>
+                    </div>
+                </div>
+                
+                <div class="ascii-art" style="margin-top: 30px;">
+╔══════════════════════════════════════════╗
+║           KAWAII HACKER TEAM             ║
+║                                          ║
+║  ♥ Chief Emotional Officer: Sakura-chan ║
+║  ♥ Lead Psychic Engineer: Yuki-kun      ║
+║  ♥ Dream Security Analyst: Miku-san     ║
+║  ♥ Aura Penetration Tester: Hana-chan   ║
+║                                          ║
+║        ♥ Making hacking cute since      ║
+║              2024.05.26 ♥               ║
+╚══════════════════════════════════════════╝
+</div>
+            </div>
+        </main>
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#" onclick="showPopup('privacy')">Privacy Policy</a>
+            <a href="#" onclick="showPopup('terms')">Terms of Service</a>
+            <a href="#" onclick="showPopup('contact')">Contact</a>
+            <a href="#" onclick="showPopup('api')">API Docs</a>
+            <a href="#" onclick="showPopup('github')">GitHub</a>
+        </div>
+        <div style="color: #00ff88; font-family: 'Orbitron', monospace;">
+            © 2024 Kawaii Hacker Tools - Hack the Planet with Love ♥
+        </div>
+    </footer>
+    
+    <!-- Popup Overlay -->
+    <div class="popup-overlay" id="popup-overlay" onclick="hidePopup()"></div>
+    
+    <!-- Popup Window -->
+    <div class="popup" id="popup">
+        <button class="close-btn" onclick="hidePopup()">×</button>
+        <div id="popup-content"></div>
+    </div>
+    
+    <script>
+        // Three.js Matrix Background
+        let scene, camera, renderer, matrixGeometry, matrixMaterial, matrixMesh;
+        
+        function initMatrix() {
+            const canvas = document.getElementById('matrix-canvas');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            // Create matrix-like particles
+            const particles = new THREE.BufferGeometry();
+            const particleCount = 1500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 2000;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 2000;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 2000;
+                
+                const color = new THREE.Color();
+                color.setHSL(Math.random() * 0.3 + 0.3, 1, 0.5);
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 3,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const particleSystem = new THREE.Points(particles, particleMaterial);
+            scene.add(particleSystem);
+            
+            camera.position.z = 1000;
+            
+            animateMatrix();
+        }
+        
+        function animateMatrix() {
+            requestAnimationFrame(animateMatrix);
+            
+            const positions = scene.children[0].geometry.attributes.position.array;
+            
+            for (let i = 0; i < positions.length; i += 3) {
+                positions[i + 1] -= Math.random() * 2;
+                
+                if (positions[i + 1] < -1000) {
+                    positions[i + 1] = 1000;
+                }
+            }
+            
+            scene.children[0].geometry.attributes.position.needsUpdate = true;
+            scene.children[0].rotation.y += 0.001;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Download simulation
+        function startDownload(card, toolName) {
+            const loadingBar = card.querySelector('.loading-progress');
+            const btn = card.querySelector('.download-btn');
+            
+            btn.innerHTML = 'INITIALIZING...';
+            btn.style.background = 'linear-gradient(45deg, #ffaa00, #ff6600)';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    completeDownload(card, toolName);
+                }
+                loadingBar.style.width = progress + '%';
+            }, 100);
+        }
+        
+        function completeDownload(card, toolName) {
+            const btn = card.querySelector('.download-btn');
+            btn.innerHTML = 'DOWNLOAD COMPLETE!';
+            btn.style.background = 'linear-gradient(45deg, #00ff88, #00aa66)';
+            
+            setTimeout(() => {
+                showPopup('download_complete');
+            }, 500);
+            
+            setTimeout(() => {
+                btn.innerHTML = btn.innerHTML.replace('DOWNLOAD COMPLETE!', 'DOWNLOAD AGAIN?');
+                btn.style.background = 'linear-gradient(45deg, #ff00aa, #aa00ff)';
+                card.querySelector('.loading-progress').style.width = '0%';
+            }, 3000);
+        }
+        
+        // Popup functionality
+        function showPopup(type) {
+            const overlay = document.getElementById('popup-overlay');
+            const popup = document.getElementById('popup');
+            const content = document.getElementById('popup-content');
+            
+            let popupHTML = '';
+            
+            switch(type) {
+                case 'download_complete':
+                    popupHTML = `
+                        <h2 style="color: #ff00aa; font-family: 'Orbitron', monospace; margin-bottom: 20px;">
+                            DOWNLOAD SUCCESSFUL! ♥
+                        </h2>
+                        <div style="color: #00ff88; margin-bottom: 15px;">
+                            Your kawaii hacking tool has been successfully downloaded to your emotional cache!
+                        </div>
+                        <div style="color: #00aaff; margin-bottom: 20px;">
+                            Remember to scan for antivirus feelings before executing. Happy hacking! ~(◕‿◕)~
+                        </div>
+                        <div class="ascii-art">
+    ♥ SUCCESS ♥
+   /  STATUS  \
+  | DOWNLOADED |
+   \ ♥ ♥ ♥ ♥ /
+    ♥ ━━━━━━ ♥
+                        </div>
+                    `;
+                    break;
+                case 'contact':
+                    popupHTML = `
+                        <h2 style="color: #ff00aa; font-family: 'Orbitron', monospace; margin-bottom: 20px;">
+                            CONTACT ADMIN
+                        </h2>
+                        <div style="color: #00aaff; margin-bottom: 15px;">
+                            Admin: kawaii_hacker@psychic.net<br/>
+                            Discord: KawaiiHacker#1337<br/>
+                            Psychic Hotline: 1-800-HACK-♥♥♥<br/>
+                            Astral Plane: Channel 42
+                        </div>
+                    `;
+                    break;
+                case 'help':
+                    popupHTML = `
+                        <h2 style="color: #00aaff; font-family: 'Orbitron', monospace; margin-bottom: 20px;">
+                            HELP CENTER
+                        </h2>
+                        <div style="color: #00ff88; margin-bottom: 15px;">
+                            Q: My emotional virus isn't spreading?<br/>
+                            A: Make sure target has feelings enabled in their settings.
+                        </div>
+                        <div style="color: #00ff88; margin-bottom: 15px;">
+                            Q: Psychic intrusion failed?<br/>
+                            A: Target may have mental firewall. Try meditation bypass.
+                        </div>
+                        <div style="color: #00ff88; margin-bottom: 15px;">
+                            Q: Dream decoder showing static?<br/>
+                            A: Target might be awake. Wait for REM cycle.
+                        </div>
+                    `;
+                    break;
+                default:
+                    popupHTML = `
+                        <h2 style="color: #ff00aa; font-family: 'Orbitron', monospace; margin-bottom: 20px;">
+                            KAWAII POPUP ♥
+                        </h2>
+                        <div style="color: #00aaff;">
+                            This is a kawaii popup! Click outside to close ~(◕‿◕)~
+                        </div>
+                    `;
+            }
+            
+            content.innerHTML = popupHTML;
+            overlay.classList.add('show');
+            popup.classList.add('show');
+        }
+        
+        function hidePopup() {
+            const overlay = document.getElementById('popup-overlay');
+            const popup = document.getElementById('popup');
+            
+            overlay.classList.remove('show');
+            popup.classList.remove('show');
+        }
+        
+        // Collapsible functionality
+        function toggleCollapsible(header) {
+            const collapsible = header.parentElement;
+            const icon = header.querySelector('span:last-child');
+            
+            collapsible.classList.toggle('active');
+            icon.textContent = collapsible.classList.contains('active') ? '-' : '+';
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
+        
+        // Initialize everything when page loads
+        window.addEventListener('load', () => {
+            initMatrix();
+            
+            // Add some random popup triggers
+            setInterval(() => {
+                if (Math.random() < 0.001) { // Very rare random popups
+                    const messages = [
+                        'Psychic connection detected!',
+                        'Emotional packet intercepted!',
+                        'Dream sequence hijacked!',
+                        'Aura signature anomaly!'
+                    ];
+                    const msg = messages[Math.floor(Math.random() * messages.length)];
+                    console.log(`[KAWAII ALERT] ${msg}`);
+                }
+            }, 1000);
+        });
+        
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.keyCode);
+            if (konamiCode.length > konamiSequence.length) {
+                konamiCode.shift();
+            }
+            
+            if (konamiCode.join('') === konamiSequence.join('')) {
+                document.body.style.filter = 'hue-rotate(180deg)';
+                setTimeout(() => {
+                    document.body.style.filter = 'none';
+                }, 3000);
+                showPopup('secret');
+            }
+        });
+    </script>
+</body>
+</html>
